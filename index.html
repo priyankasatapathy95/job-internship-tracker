@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Job & Internship Tracker</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div>
+        <h1>Job & Internship Tracker</h1>
+        <p class="subtitle">Keep every application in one place</p>
+      </div>
+      <button class="btn primary" id="openAddModal">+ Add Application</button>
+    </header>
+
+    <section class="stats" id="stats"></section>
+
+    <section class="controls">
+      <input type="text" id="searchInput" placeholder="Search company or role..." />
+      <div class="filters" id="filters">
+        <button class="filter-btn active" data-status="All">All</button>
+        <button class="filter-btn" data-status="Applied">Applied</button>
+        <button class="filter-btn" data-status="OA/Test">OA/Test</button>
+        <button class="filter-btn" data-status="Interview">Interview</button>
+        <button class="filter-btn" data-status="Offer">Offer</button>
+        <button class="filter-btn" data-status="Rejected">Rejected</button>
+      </div>
+    </section>
+
+    <section class="table-wrap">
+      <table id="appTable">
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Date Applied</th>
+            <th>Link</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="appTableBody"></tbody>
+      </table>
+      <p id="emptyState" class="empty-state" style="display:none;">No applications yet. Click "Add Application" to get started.</p>
+    </section>
+  </div>
+
+  <!-- Add/Edit Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h2 id="modalTitle">Add Application</h2>
+      <form id="appForm">
+        <input type="hidden" id="appId" />
+        <label>Company
+          <input type="text" id="company" required />
+        </label>
+        <label>Role
+          <input type="text" id="role" required />
+        </label>
+        <label>Status
+          <select id="status">
+            <option>Applied</option>
+            <option>OA/Test</option>
+            <option>Interview</option>
+            <option>Offer</option>
+            <option>Rejected</option>
+          </select>
+        </label>
+        <label>Date Applied
+          <input type="date" id="dateApplied" />
+        </label>
+        <label>Job Link
+          <input type="url" id="link" placeholder="https://..." />
+        </label>
+        <label>Notes
+          <textarea id="notes" rows="3" placeholder="Referral, recruiter contact, next steps..."></textarea>
+        </label>
+        <div class="modal-actions">
+          <button type="button" class="btn" id="cancelModal">Cancel</button>
+          <button type="submit" class="btn primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
