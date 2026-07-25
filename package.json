@@ -1,0 +1,19 @@
+{
+  "name": "job-internship-tracker",
+  "version": "1.0.0",
+  "description": "A full-stack web app to track job and internship applications through the hiring pipeline.",
+  "main": "server.js",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  },
+  "author": "Priyanka Priyadarshini Satapathy",
+  "license": "MIT"
+}
