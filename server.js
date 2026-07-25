@@ -1,32 +1,19 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 const db = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Absolute path to the public folder, resolved once and reused below.
-// (This was already correct — kept as-is, just pulled into a constant
-// so the root route and the static middleware are guaranteed to point
-// at the exact same folder.)
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 app.use(cors());
 app.use(express.json());
-
-// Serve static assets (style.css, app.js, etc.) from /public.
-// This alone is usually enough for Express to also serve index.html on
-// GET /, but on some hosts (Render included) that implicit behavior can
-// be masked — e.g. by a platform health-check hitting "/" before static
-// assets are confirmed to exist, or by case-sensitivity differences
-// between local (Windows/Mac) and the Linux container Render deploys to.
-// The explicit route below removes that ambiguity entirely.
 app.use(express.static(PUBLIC_DIR));
 
-// Explicitly serve the frontend's entry point on the root route.
-// This guarantees index.html loads when visiting the Render URL directly,
-// regardless of how the platform's static-file handling behaves.
 app.get('/', (req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
 });
@@ -123,10 +110,25 @@ app.get('/api/stats', (req, res) => {
   res.json({ total, byStatus });
 });
 
-// Bind to 0.0.0.0 (not just 'localhost') so Render's container networking
-// can actually route external traffic to this process. Express normally
-// defaults to all interfaces anyway, but this makes it explicit and
-// removes one more possible cause of "Cannot GET /" / unreachable app.
+// --- Startup diagnostic ---
+// Logs exactly what Render's filesystem sees at boot, so we can confirm
+// from the Render logs whether public/index.html actually made it into
+// the deployed container. Safe to remove once the deploy is confirmed working.
+console.log('--- Startup diagnostic ---');
+console.log('__dirname:', __dirname);
+try {
+  console.log('Contents of __dirname:', fs.readdirSync(__dirname));
+} catch (err) {
+  console.log('Could not read __dirname:', err.message);
+}
+try {
+  console.log('Contents of public/:', fs.readdirSync(PUBLIC_DIR));
+  console.log('index.html exists:', fs.existsSync(path.join(PUBLIC_DIR, 'index.html')));
+} catch (err) {
+  console.log('Could not read public/ folder:', err.message);
+}
+console.log('--- End diagnostic ---');
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Job Tracker running at http://localhost:${PORT}`);
 });
